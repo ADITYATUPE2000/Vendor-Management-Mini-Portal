@@ -1,0 +1,105 @@
+build the project-Full Stack Developer 
+
+Task Title: Vendor Management Mini-Portal
+Objective: Assess your ability to design, develop, and deploy a
+functional full-stack web module aligned with QuickSO’s product
+philosophy.
+
+Overview
+You are required to build a Vendor Management Portal with the following core features:
+1. Vendor Registration
+2. Vendor Product Showcase Page
+3. Vendor Listing Page
+4. Client Feedback & Rating System
+5. Admin View for Ratings & Vendor Profiles
+
+Requirements
+1. Vendor Registration Page
+A form for vendors to sign up with the following fields:
+● Vendor Name
+● Owner Name
+● Contact Number
+● Email
+
+● Business Category (Dropdown: Contractor, Material Supplier, Consultant, Fabricator,
+etc.)
+● City
+● Description
+● Upload Company Logo (optional)
+● Password + Confirm Password
+
+Features required:
+● Form validation
+● Backend API to save vendor details
+● Password hashing
+● Success acknowledgement screen
+
+2. Vendor Login & Dashboard
+● Vendor can log in with email + password
+● Dashboard should show:
+○ Profile summary
+○ Option to update details
+○ Option to manage products
+
+3. Vendor Product Showcase Page (Public Page)
+Each vendor gets a unique public-facing URL, e.g. /vendor/{vendorId}
+This page should display:
+
+● Vendor name
+● Category
+● Logo (if uploaded)
+● Description
+● List of offered products (added from vendor dashboard)
+
+Each product entry:
+● Product Name
+● Product Image
+● Short Description
+● Price Range (optional)
+
+4. Products Management (Vendor Panel)
+Vendor should be able to:
+● Add a new product
+● Edit product
+● Delete product
+
+Only vendor-specific data should be editable (authorization required).
+
+5. Vendor Listing Page (Public)
+A page that lists all registered vendors:
+● Search by name
+
+● Filter by category
+● Sort by rating
+
+Each vendor card should include:
+● Logo
+● Name
+● Category
+● Average Rating
+● “View Profile” button
+
+6. Feedback & Rating Page
+A dedicated page /vendor/{vendorId}/feedback
+Client Feedback Form:
+Fields:
+● Client Name
+● Project Name
+● Rating (1 to 5 stars)
+● Comments
+
+Requirements:
+● Save rating + comments in database
+● Automatically update vendor’s average rating
+
+7. Admin Panel (Basic)
+A simple admin view (no login required for this task):
+● Table of all vendors
+● Column: Vendor Name, Category, Rating, No. of Reviews
+● Click to view vendor details
+
+🛠 Tech Requirements
+You are free to use any tech stack, but recommended options:
+Frontend: React / Next.js
+Backend: Node.js
+Database: PostgreSQL
