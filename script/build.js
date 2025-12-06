@@ -36,7 +36,24 @@ async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
   console.log("building frontend...");
-  await viteBuild();
+  
+  // Intercept console.warn to filter PostCSS warning
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    const message = args[0]?.toString() || '';
+    // Suppress known harmless PostCSS warning from Tailwind CSS
+    if (message.includes('PostCSS plugin did not pass the `from` option')) {
+      return;
+    }
+    originalWarn.apply(console, args);
+  };
+  
+  try {
+    await viteBuild();
+  } finally {
+    // Restore original console.warn
+    console.warn = originalWarn;
+  }
 
   console.log("building backend...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
