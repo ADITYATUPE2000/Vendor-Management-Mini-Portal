@@ -31,6 +31,9 @@ export default defineConfig({
     },
   },
   root: path.resolve(__dirname, "frontend"),
+  css: {
+    devSourcemap: true,
+  },
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
