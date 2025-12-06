@@ -34,7 +34,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           // Vendor chunk for React and core React libraries
-          'react-vendor': ['react', 'react-dom', 'react-router', 'wouter'],
+          'react-vendor': ['react', 'react-dom', 'wouter'],
           // UI libraries chunk
           'ui-vendor': [
             '@radix-ui/react-accordion',
