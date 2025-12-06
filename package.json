@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "set NODE_ENV=development&& node backend/index.js",
     "build": "node script/build.js",
