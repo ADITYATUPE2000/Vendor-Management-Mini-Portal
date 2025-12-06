@@ -6,13 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export function serveStatic(app) {
+  // Resolve path relative to project root (works from both backend/ and api/)
   const distPath = path.resolve(__dirname, "../dist/public");
-
-  if (!distPath) {
-    throw new Error(
-      "Could not find the build directory, make sure to build the frontend first",
-    );
-  }
 
   app.use(express.static(distPath));
 

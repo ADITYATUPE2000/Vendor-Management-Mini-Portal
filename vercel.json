@@ -1,6 +1,16 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
-  "framework": null,
-  "outputDirectory": "dist"
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ],
+  "functions": {
+    "api/index.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
 }
 
