@@ -1,0 +1,23 @@
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export function serveStatic(app) {
+  const distPath = path.resolve(__dirname, "../dist/public");
+
+  if (!distPath) {
+    throw new Error(
+      "Could not find the build directory, make sure to build the frontend first",
+    );
+  }
+
+  app.use(express.static(distPath));
+
+  // fall through to index.html if the file doesn't exist
+  app.use("*", (_req, res) => {
+    res.sendFile(path.resolve(distPath, "index.html"));
+  });
+}
