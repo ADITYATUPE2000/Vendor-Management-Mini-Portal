@@ -46,29 +46,43 @@ export async function registerVendor(req, res) {
 export async function loginVendor(req, res) {
   try {
     const validatedData = loginVendorSchema.parse(req.body);
-    
-    const vendor = await storage.getVendorByEmail(validatedData.email);
+    const { email, password } = validatedData;
+
+    // Find vendor by email
+    const vendor = await storage.getVendorByEmail(email);
+
     if (!vendor) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const isValidPassword = await comparePassword(validatedData.password, vendor.passwordHash);
-    if (!isValidPassword) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    // Compare password
+    const isValid = await comparePassword(password, vendor.passwordHash);
+
+    if (!isValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Set session
+    // Set session - CRITICAL PART
     req.session.vendorId = vendor.id;
 
-    // Don't send password hash
-    const { passwordHash, ...vendorData } = vendor;
-    res.json(vendorData);
+    // Save session explicitly before responding
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Session error" });
+      }
+
+      // Don't send password hash back
+      const { passwordHash: _, ...vendorData } = vendor;
+      res.json({ vendor: vendorData });
+    });
+
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ message: error.errors[0].message });
     }
     console.error("Login error:", error);
-    res.status(500).json({ message: "Login failed" });
+    res.status(500).json({ message: "Server error" });
   }
 }
 
@@ -164,4 +178,3 @@ export async function getVendorRatings(req, res) {
     res.status(500).json({ message: "Failed to fetch ratings" });
   }
 }
-

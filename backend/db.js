@@ -40,10 +40,30 @@ loadEnvLocal();
 const { Pool } = pg;
 
 if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+  const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL;
+  if (isProduction) {
+    throw new Error(
+      "DATABASE_URL must be set in production. Please configure it in your Vercel environment variables.",
+    );
+  } else {
+    throw new Error(
+      "DATABASE_URL must be set. Did you forget to provision a database? Check your .env.local file.",
+    );
+  }
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  // Add connection timeout and error handling for production
+  connectionTimeoutMillis: 10000, // 10 seconds
+  query_timeout: 10000,
+  statement_timeout: 10000,
+});
+
+// Handle pool errors
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1);
+});
+
 export const db = drizzle(pool, { schema });

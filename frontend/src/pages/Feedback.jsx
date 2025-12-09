@@ -168,7 +168,7 @@ export default function Feedback() {
               <Avatar className="h-16 w-16 border-2 border-border">
                 <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} className="object-cover" />
                 <AvatarFallback className="text-xl bg-primary/10 text-primary">
-                  {vendor.vendorName.charAt(0).toUpperCase()}
+                  {vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
                 </AvatarFallback>
               </Avatar>
               <div>

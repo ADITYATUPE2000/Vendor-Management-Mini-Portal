@@ -66,9 +66,9 @@ export function Navbar() {
                   <Button variant="ghost" className="flex items-center gap-2" data-testid="user-menu">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} />
-                      <AvatarFallback>{vendor.vendorName.charAt(0).toUpperCase()}</AvatarFallback>
+                      <AvatarFallback>{vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium">{vendor.vendorName}</span>
+                    <span className="text-sm font-medium">{vendor.vendorName || 'Vendor'}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">

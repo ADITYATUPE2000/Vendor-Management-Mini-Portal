@@ -1,9 +1,45 @@
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import bcrypt from "bcrypt";
-import { storage } from "./storage.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { pool } from "./db.js"; // ADD THIS - import your database pool
 
 const SALT_ROUNDS = 10;
+
+// Lightweight .env.local loader (same as in db.js)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadEnvLocal() {
+  try {
+    const envPath = path.join(__dirname, "..", ".env.local");
+    if (!fs.existsSync(envPath)) {
+      return;
+    }
+
+    const content = fs.readFileSync(envPath, "utf8");
+    for (const line of content.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+
+      const [key, ...rest] = trimmed.split("=");
+      if (!key) continue;
+      const trimmedKey = key.trim();
+      const rawValue = rest.join("=").trim();
+      const value = rawValue.replace(/^['"]|['"]$/g, "");
+
+      if (!(trimmedKey in process.env)) {
+        process.env[trimmedKey] = value;
+      }
+    }
+  } catch {
+    // Fail silently; app will still error with a clear SESSION_SECRET message below
+  }
+}
+
+loadEnvLocal();
 
 export async function hashPassword(password) {
   return bcrypt.hash(password, SALT_ROUNDS);
@@ -28,9 +64,9 @@ export function getSession() {
   
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
+    pool: pool, // CHANGED: Use pool instead of conString
     createTableIfMissing: false,
-    ttl: sessionTtl,
+    ttl: sessionTtl / 1000, // CHANGED: ttl expects seconds, not milliseconds
     tableName: "sessions",
   });
   

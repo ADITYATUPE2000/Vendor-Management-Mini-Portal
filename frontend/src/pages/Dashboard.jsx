@@ -252,10 +252,10 @@ export default function Dashboard() {
                 <Avatar className="h-24 w-24 mx-auto mb-4 border-4 border-border">
                   <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} className="object-cover" />
                   <AvatarFallback className="text-3xl bg-primary/10 text-primary">
-                    {vendor.vendorName.charAt(0).toUpperCase()}
+                    {vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
                   </AvatarFallback>
                 </Avatar>
-                <CardTitle>{vendor.vendorName}</CardTitle>
+                <CardTitle>{vendor.vendorName || 'Vendor'}</CardTitle>
                 <Badge variant="secondary" className="mx-auto mt-2" size="sm">
                   {vendor.businessCategory}
                 </Badge>

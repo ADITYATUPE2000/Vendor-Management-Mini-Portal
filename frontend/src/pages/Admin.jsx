@@ -153,7 +153,7 @@ export default function Admin() {
                               <Avatar className="h-10 w-10">
                                 <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} className="object-cover" />
                                 <AvatarFallback className="bg-primary/10 text-primary">
-                                  {vendor.vendorName.charAt(0).toUpperCase()}
+                                  {vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
@@ -211,7 +211,7 @@ export default function Admin() {
                   <Avatar className="h-20 w-20 border-2 border-border">
                     <AvatarImage src={selectedVendor.logoUrl || undefined} alt={selectedVendor.vendorName} className="object-cover" />
                     <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                      {selectedVendor.vendorName.charAt(0).toUpperCase()}
+                      {selectedVendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
                     </AvatarFallback>
                   </Avatar>
                   <div>

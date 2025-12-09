@@ -61,9 +61,25 @@ export default function Register() {
       });
     },
     onError: (error) => {
+      console.error("Registration error:", error);
+      let errorMessage = "Something went wrong. Please try again.";
+
+      if (error.message) {
+        // Handle specific backend error messages
+        if (error.message.includes("Email already registered")) {
+          errorMessage = "This email address is already registered. Please use a different email or try logging in.";
+        } else if (error.message.includes("Password must be at least")) {
+          errorMessage = error.message;
+        } else if (error.message.includes("Passwords don't match")) {
+          errorMessage = "Passwords don't match. Please check and try again.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       toast({
         title: "Registration Failed",
-        description: error.message || "Something went wrong. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },

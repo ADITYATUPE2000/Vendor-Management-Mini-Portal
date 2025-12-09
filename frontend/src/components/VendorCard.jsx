@@ -16,7 +16,7 @@ export function VendorCard({ vendor }) {
           <Avatar className="h-16 w-16 border-2 border-border">
             <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} className="object-cover" />
             <AvatarFallback className="text-xl font-semibold bg-primary/10 text-primary">
-              {vendor.vendorName.charAt(0).toUpperCase()}
+              {vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">

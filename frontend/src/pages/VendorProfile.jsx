@@ -70,7 +70,7 @@ export default function VendorProfile() {
             <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
               <AvatarImage src={vendor.logoUrl || undefined} alt={vendor.vendorName} className="object-cover" />
               <AvatarFallback className="text-4xl bg-primary/10 text-primary">
-                {vendor.vendorName.charAt(0).toUpperCase()}
+                {vendor.vendorName?.charAt(0)?.toUpperCase() || 'V'}
               </AvatarFallback>
             </Avatar>
 
