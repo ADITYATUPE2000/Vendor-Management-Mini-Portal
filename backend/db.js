@@ -52,8 +52,13 @@ if (!process.env.DATABASE_URL) {
   }
 }
 
+// Configure SSL for production - required by most cloud providers (Neon, Supabase, etc.)
+const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL;
+const sslConfig = isProduction ? { rejectUnauthorized: false } : undefined;
+
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: sslConfig,
   // Add connection timeout and error handling for production
   connectionTimeoutMillis: 10000, // 10 seconds
   query_timeout: 10000,

@@ -7,16 +7,28 @@ async function throwIfResNotOk(res) {
   }
 }
 
-export async function apiRequest(method, url, data) {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
 
-  await throwIfResNotOk(res);
-  return res;
+export async function apiRequest(method, url, data) {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // ADD THIS - critical for sending cookies
+  };
+
+  if (data) {
+    options.body = JSON.stringify(data);
+  }
+
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "Request failed");
+  }
+
+  return response;
 }
 
 export const getQueryFn = ({ on401: unauthorizedBehavior }) =>
