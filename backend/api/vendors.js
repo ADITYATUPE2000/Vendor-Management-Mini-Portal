@@ -10,7 +10,7 @@ import { z } from "zod";
 export async function registerVendor(req, res) {
   try {
     const validatedData = insertVendorSchema.parse(req.body);
-    
+
     // Check if email already exists
     const existingVendor = await storage.getVendorByEmail(validatedData.email);
     if (existingVendor) {
@@ -35,7 +35,12 @@ export async function registerVendor(req, res) {
       return res.status(400).json({ message: error.errors[0].message });
     }
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Registration failed" });
+    // Include more details for debugging (remove in production after debugging)
+    const errorMessage = error.message || "Unknown error";
+    const errorDetails = process.env.NODE_ENV === "production"
+      ? errorMessage
+      : `${errorMessage} | ${error.stack?.split('\n')[0] || ''}`;
+    res.status(500).json({ message: `Registration failed: ${errorDetails}` });
   }
 }
 
@@ -134,7 +139,7 @@ export async function updateVendor(req, res) {
 
     const validatedData = updateVendorSchema.parse(req.body);
     const vendor = await storage.updateVendor(req.params.id, validatedData);
-    
+
     if (!vendor) {
       return res.status(404).json({ message: "Vendor not found" });
     }
