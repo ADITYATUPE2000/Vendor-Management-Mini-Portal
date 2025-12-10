@@ -24,8 +24,14 @@ export async function apiRequest(method, url, data) {
   const response = await fetch(url, options);
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Request failed");
+    const error = await response.json().catch(() => null);
+    if (error) {
+      throw new Error(error.message || "Request failed");
+    } else {
+      // Fallback for non-JSON errors (e.g. Vercel 500 HTML page)
+      const text = await response.text().catch(() => "Unknown error");
+      throw new Error(`Request failed (${response.status}): ${text.substring(0, 100)}...`);
+    }
   }
 
   return response;
