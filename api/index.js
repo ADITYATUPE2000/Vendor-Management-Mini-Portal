@@ -4,8 +4,24 @@
 import express from "express";
 import { registerRoutes } from "../backend/routes.js";
 import { serveStatic } from "../backend/static.js";
+import { db } from "../backend/db.js";
+import * as schema from "../shared/schema.js";
 
 const app = express();
+
+// Enable CORS headers for API routes
+app.use('/api', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 app.use(
   express.json({
@@ -73,10 +89,15 @@ async function initializeApp() {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
+      // Log errors in production too, but be more selective
+      console.error(`[${new Date().toISOString()}] Error ${status}:`, {
+        message: err.message,
+        stack: err.stack?.split('\n').slice(0, 5).join('\n'), // First 5 lines of stack
+        url: _req?.url,
+        method: _req?.method
+      });
+
       res.status(status).json({ message });
-      if (process.env.NODE_ENV !== "production") {
-        console.error(err);
-      }
     });
 
     // In production (Vercel), always serve static files
@@ -96,4 +117,3 @@ export default async function handler(req, res) {
   // Forward the request to Express
   app(req, res);
 }
-

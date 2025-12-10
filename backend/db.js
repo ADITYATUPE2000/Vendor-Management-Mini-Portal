@@ -60,10 +60,13 @@ export const pool = new Pool({
   statement_timeout: 10000,
 });
 
-// Handle pool errors
+// Handle pool errors - don't exit in serverless environments
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
-  process.exit(-1);
+  // Don't exit in production/serverless environments
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    process.exit(-1);
+  }
 });
 
 export const db = drizzle(pool, { schema });

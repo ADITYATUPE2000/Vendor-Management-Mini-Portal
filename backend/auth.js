@@ -65,7 +65,7 @@ export function getSession() {
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     pool: pool, // CHANGED: Use pool instead of conString
-    createTableIfMissing: false,
+    createTableIfMissing: true, // Create table if missing in production
     ttl: sessionTtl / 1000, // CHANGED: ttl expects seconds, not milliseconds
     tableName: "sessions",
   });
