@@ -38,17 +38,9 @@ export async function registerRoutes(httpServer, app) {
   // Rating routes
   app.post("/api/ratings", createRating);
 
-  // Debug endpoint - check environment variables (remove after debugging)
-  app.get("/api/debug/env", (req, res) => {
-    res.json({
-      DATABASE_URL_SET: !!process.env.DATABASE_URL,
-      DATABASE_URL_LENGTH: process.env.DATABASE_URL?.length || 0,
-      DATABASE_URL_STARTS_WITH: process.env.DATABASE_URL?.substring(0, 15) || "NOT SET",
-      SESSION_SECRET_SET: !!process.env.SESSION_SECRET,
-      NODE_ENV: process.env.NODE_ENV || "NOT SET",
-      VERCEL: process.env.VERCEL || "NOT SET",
-    });
-  });
+
+
+
 
   return httpServer;
 }
