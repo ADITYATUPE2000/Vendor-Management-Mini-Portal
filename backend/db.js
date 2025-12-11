@@ -39,7 +39,7 @@ loadEnvLocal();
 
 const { Pool } = pg;
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === "") {
   const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL;
   if (isProduction) {
     throw new Error(
@@ -50,6 +50,14 @@ if (!process.env.DATABASE_URL) {
       "DATABASE_URL must be set. Did you forget to provision a database? Check your .env.local file.",
     );
   }
+}
+
+// Validate DATABASE_URL format
+const dbUrl = process.env.DATABASE_URL.trim();
+if (!dbUrl.startsWith("postgres://") && !dbUrl.startsWith("postgresql://")) {
+  throw new Error(
+    `DATABASE_URL appears invalid (should start with postgres:// or postgresql://). Current value starts with: ${dbUrl.substring(0, 15)}...`
+  );
 }
 
 // Configure SSL for production - required by most cloud providers (Neon, Supabase, etc.)
