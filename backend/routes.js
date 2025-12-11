@@ -38,9 +38,5 @@ export async function registerRoutes(httpServer, app) {
   // Rating routes
   app.post("/api/ratings", createRating);
 
-
-
-
-
   return httpServer;
 }
